@@ -1,0 +1,22 @@
+{
+  "name": "xenex-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "XENEX Website - Workspace root",
+  "scripts": {
+    "dev": "npm run dev --prefix xenex",
+    "build": "npm run build --prefix xenex",
+    "start": "npm start --prefix xenex",
+    "lint": "npm run lint --prefix xenex",
+    "install": "npm install --prefix xenex",
+    "install:all": "npm install && npm install --prefix xenex"
+  },
+  "workspaces": [
+    "xenex"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
+

@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  --font-racing: 'Rajdhani', 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-inter);
+  background-color: #000000;
+  color: #ffffff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .sport-gradient {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
+  }
+  
+  .red-gradient {
+    background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+    background-size: 200% 200%;
+    animation: gradient 8s ease infinite;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-500 hover:scale-105 hover:shadow-red-glow hover:-translate-y-2;
+  }
+  
+  .btn-primary {
+    @apply bg-xenex-red text-white font-semibold px-8 py-3 rounded-lg 
+           hover:bg-xenex-red-dark transition-all duration-300 
+           hover:shadow-red-glow transform hover:scale-110 hover:-translate-y-1
+           relative overflow-hidden;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border-2 border-xenex-red text-xenex-red font-semibold 
+           px-8 py-3 rounded-lg hover:bg-xenex-red hover:text-white 
+           transition-all duration-300 transform hover:scale-110 hover:-translate-y-1
+           relative overflow-hidden;
+  }
+  
+  .btn-secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-secondary:hover::before {
+    left: 100%;
+  }
+  
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  
+  .animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .glow-text {
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5),
+                 0 0 20px rgba(255, 0, 0, 0.3),
+                 0 0 30px rgba(255, 0, 0, 0.2);
+  }
+  
+  .particle-bg {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .particle-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: float 20s linear infinite;
+    pointer-events: none;
+  }
+  
+  .shimmer-effect {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0) 0%,
+      rgba(255, 0, 0, 0.2) 50%,
+      rgba(255, 0, 0, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite;
+  }
+  
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(135deg, #000000, #000000);
+    border-radius: 12px;
+  }
+  
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    padding: 2px;
+    background: linear-gradient(135deg, #ff0000, #cc0000, #ff0000);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: gradient 3s ease infinite;
+    background-size: 200% 200%;
+  }
+}
+
+
