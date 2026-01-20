@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [submenuTimeout, setSubmenuTimeout] = useState<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -18,16 +19,43 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Clear any existing timeout when component unmounts
+  useEffect(() => {
+    return () => {
+      if (submenuTimeout) {
+        clearTimeout(submenuTimeout);
+      }
+    };
+  }, [submenuTimeout]);
+
+  const handleSubmenuEnter = (href: string) => {
+    // Clear any pending close timeout
+    if (submenuTimeout) {
+      clearTimeout(submenuTimeout);
+      setSubmenuTimeout(null);
+    }
+    setOpenSubmenu(href);
+  };
+
+  const handleSubmenuLeave = () => {
+   
+    const timeout = setTimeout(() => {
+      setOpenSubmenu(null);
+    }, 300); // 300ms delay
+    
+    setSubmenuTimeout(timeout);
+  };
+
   const navLinks = [
     { href: '/', label: 'Home' },
-        { 
-          href: '/products', 
-          label: 'Products',
-          submenu: [
-            { href: '/products/xenex', label: 'XENEX' },
-            { href: '/products/xdrive', label: 'XDRIVE' }
-          ]
-        },
+    { 
+      href: '/products', 
+      label: 'Products',
+      submenu: [
+        { href: '/products/xenex', label: 'XENEX' },
+        { href: '/products/xdrive', label: 'XDRIVE' }
+      ]
+    },
     { 
       href: '/builds', 
       label: 'Cars',
@@ -56,7 +84,14 @@ export default function Header() {
     }}>
       <nav className="container mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Desktop Navigation */}
+          {/* Logo - Added for better navigation */}
+          <div className="flex-shrink-0">
+            <Link href="/" className="text-xl font-bold text-white hover:text-xenex-red transition-colors">
+              YOUR LOGO
+            </Link>
+          </div>
+
+          {/* Desktop Navigation - FIXED SUBMENU ISSUE */}
           <div className="hidden lg:flex items-center space-x-1">
             {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.submenu && link.submenu.some(sub => pathname === sub.href));
@@ -66,8 +101,8 @@ export default function Header() {
                 <div
                   key={link.href}
                   className="relative group"
-                  onMouseEnter={() => hasSubmenu && setOpenSubmenu(link.href)}
-                  onMouseLeave={() => hasSubmenu && setOpenSubmenu(null)}
+                  onMouseEnter={() => hasSubmenu && handleSubmenuEnter(link.href)}
+                  onMouseLeave={handleSubmenuLeave}
                 >
                   <Link
                     href={link.href}
@@ -76,6 +111,7 @@ export default function Header() {
                         ? 'text-xenex-red bg-xenex-gray border border-xenex-red/30'
                         : 'text-white/80 hover:text-xenex-red hover:bg-xenex-gray/50'
                     }`}
+                    onMouseEnter={() => hasSubmenu && handleSubmenuEnter(link.href)}
                   >
                     {link.label}
                     {hasSubmenu && (
@@ -85,9 +121,13 @@ export default function Header() {
                     )}
                   </Link>
                   
-                  {/* Submenu Dropdown */}
+                  {/* Submenu Dropdown : Added mouse events to submenu itself */}
                   {hasSubmenu && openSubmenu === link.href && (
-                    <div className="absolute top-full left-0 mt-2 w-48 bg-xenex-gray rounded-lg shadow-lg border border-xenex-red/30 overflow-hidden z-50 animate-fade-in">
+                    <div 
+                      className="absolute top-full left-0 mt-2 w-48 bg-xenex-gray rounded-lg shadow-lg border border-xenex-red/30 overflow-hidden z-50"
+                      onMouseEnter={() => handleSubmenuEnter(link.href)}
+                      onMouseLeave={handleSubmenuLeave}
+                    >
                       {link.submenu?.map((subLink) => {
                         const isSubActive = pathname === subLink.href;
                         return (
